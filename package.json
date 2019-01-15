@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "start": "npm run build; vue-cli-service serve --mode production --port 80 --host 0.0.0.0",
+    "start": "vue-cli-service serve --mode production --port 80 --host 0.0.0.0 --https true",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
