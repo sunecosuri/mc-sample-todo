@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Task from '@/components/Task.vue'
 import Signup from '@/components/Signup'
 import Signin from '@/components/Signin'
+import Task from '@/components/Task'
 import firebase from 'firebase'
 
 Vue.use(Router)
@@ -11,9 +11,14 @@ let router = new Router({
   mode: 'history',
   routes: [
     {
+      path: '*',
+      redirect: 'signin'
+    },
+    {
       path: '/',
       name: 'Task',
       component: Task,
+      meta: { requiresAuth: true }
     },
     {
       path: '/signup',
@@ -28,15 +33,12 @@ let router = new Router({
   ]
 })
 
-
-// ログインが完了していない場合にサインインへリダイレクトさせる
+// ログインが完了していない場合にサインインページの飛ばす
 router.beforeEach((to, from, next) => {
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-  // firebaseから認証情報を取得できるか確認する
-  const currentUser = firebase.auth().currentUser
+  let requiresAuth = to.matched.some(record => record.meta.requiresAuth)
   if (requiresAuth) {
+    let currentUser = firebase.auth().currentUser
     if (!currentUser) {
-      // singin へリダイレクト
       next({
         path: '/signin',
         query: { redirect: to.fullPath }
@@ -48,6 +50,5 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
-
 
 export default router
